@@ -35,6 +35,7 @@
 
 import logging
 from itertools import islice
+import copy
 
 
 class TuringMachine:
@@ -58,9 +59,11 @@ class TuringMachine:
     """
 
     def __init__(self, transitions, start_state='q0', accept_state='qa', reject_state='qr', blank_symbol=''):
-        # TODO: Implement the constructor. Initialize transitions, start_state, accept_state,
-        # reject_state, blank_symbol, and any other helpful structures.
-        pass
+        self.transitions = transitions
+        self.start_state = start_state
+        self.accept_state = accept_state
+        self.reject_state = reject_state
+        self.blank_symbol = blank_symbol
 
     def run(self, input_):
         """Execute the Turing machine for a particular input.
@@ -80,13 +83,95 @@ class TuringMachine:
         - 'right_hand_side': list of symbols on the right hand side of the current position.
 
         """
-        # TODO: Implement the simulator loop as a Python generator.
-        # 1. Initialize the tape using two lists (left_hand_side and right_hand_side) and the current symbol.
-        # 2. Yield the current step (action, configuration).
-        # 3. Read transitions and update state, write symbols, and move the head ('L' or 'R').
-        # 4. Handle tape expansion dynamically for both left and right directions (double-sided infinite tape).
-        # 5. Log a warning using logging.warning() if the singly-infinite tape boundary is crossed before Part III.
-        pass
+
+        # =-=-=-= Init Cofiguration: (Tape config) =-=-=-=
+        # Eror handling for Empty input:
+        current_symbol = (
+            input_[0]
+            if len(input_) > 0
+            else self.blank_symbol
+        )
+
+        configuration = {
+            "state": self.start_state,
+            "left_hand_side": [],
+            "symbol": current_symbol,
+            "right_hand_side": list(input_[1:])
+        }
+        
+        yield None, copy.deepcopy(configuration)
+
+        while(True):
+
+            # if Accept: return
+            if configuration["state"] == self.accept_state:
+                yield "Accept", copy.deepcopy(configuration)
+                return
+            # if Reject: return
+            if configuration["state"] == self.reject_state:
+                yield "Reject", copy.deepcopy(configuration)
+                return
+
+            #  Find Transition in Transitions:
+            if ((configuration["state"], configuration["symbol"]) in self.transitions):
+                # Extract Transition component:
+                next_state , write_symbol, direction = self.transitions[(configuration["state"], configuration["symbol"])]
+                
+                # Update Config:
+                configuration["symbol"] = write_symbol
+                configuration["state"] = next_state
+
+                # Move: Right
+                if(direction == "R"):
+                    # Push current cell to the left side of the tape:
+                    configuration["left_hand_side"].insert(
+                        0,
+                        configuration["symbol"]
+                    )
+
+                    # Move to right:
+                    if configuration["right_hand_side"]:
+                        configuration["symbol"] = configuration["right_hand_side"].pop(0)
+                    # Empty right:
+                    else:
+                        configuration["symbol"] = self.blank_symbol
+
+                # Move Left:
+                elif direction == "L":
+                    # Push Current cell to the right side of the tape:
+                    configuration["right_hand_side"].insert(
+                        0,
+                        configuration["symbol"]
+                    )
+
+                    # Move to left:
+                    if configuration["left_hand_side"]:
+                        configuration["symbol"] = configuration["left_hand_side"].pop(0)
+                    # Empty left:
+                    else:
+                        # in Todo: Log a warning using logging.warning()
+                        logging.warning(
+                            "Crossed the left boundary of singly-infinite tape."
+                        )
+                        configuration["symbol"] = self.blank_symbol
+
+                # if  invalid Transition:
+                else:
+                    raise ValueError(
+                        f"Unknown direction: {direction}"
+                    )
+
+                yield None, copy.deepcopy(configuration)
+                    
+            
+            else:
+                yield "Reject", copy.deepcopy(configuration)
+                return
+
+
+
+        
+
 
     def accepts(self, input_, step_limit=100):
         """Check whether the Turing machine accepts a string.
@@ -96,9 +181,24 @@ class TuringMachine:
         :return: True if the machine halts in accept_state, False if it rejects,
                  or None if the step limit is reached without halting.
         """
-        # TODO: Run the generator up to step_limit and check the action of the final yielded state.
-        # Remember to log a warning if the step_limit is reached without halting.
-        pass
+
+        # Run(input):
+        Outputs = self.run(input_)
+
+        # Check outputs:
+        # Use islice to consume at most step_limit configurations from the generator.
+        for action, config in islice(Outputs, step_limit):
+
+            if(action == "Accept"):
+                return True
+            elif(action == "Reject"):
+                return False
+            
+        # if no Halting:
+        logging.warning(
+            "Step-limit is reached without Halting"
+        )
+        return None
 
     def rejects(self, input_, **kwargs):
         """Check whether the Turing machine rejects a string.
@@ -106,8 +206,12 @@ class TuringMachine:
         :param input_: the input string or list.
         :return: True if the machine rejects the string, False if it accepts.
         """
-        # TODO: Determine rejection by checking if accepts() returns False.
-        pass
+        
+        if(self.accepts(input_, **kwargs) is None):
+            return None
+        
+        else:
+            return not self.accepts(input_, **kwargs)
 
     def debug(self, input_, step_limit=100, colored=False):
         """Print the execution configuration of the machine per transition for debugging.
@@ -116,6 +220,14 @@ class TuringMachine:
         :param step_limit: the maximum number of steps to output.
         :param colored: True to output colored boundaries in terminal.
         """
-        # TODO: Loop over the steps yielded by run() up to step_limit and print the tape configuration.
-        # E.g., print the state and the tape with the head highlighted in brackets like: left[symbol]right
-        pass
+        Outputs = self.run(input_)
+
+        for action, config in islice(Outputs, step_limit):
+            # Left side -> Reverse 
+            left = ''.join(reversed(config["left_hand_side"]))
+            # Right side -> Same
+            right = ''.join(config["right_hand_side"])
+
+            print(
+                f'{config["state"]}: {left}[{config["symbol"]}]{right}'
+            )
