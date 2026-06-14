@@ -102,7 +102,7 @@ class TuringMachine:
         yield None, copy.deepcopy(configuration)
 
         while(True):
-
+            
             # if Accept: return
             if configuration["state"] == self.accept_state:
                 yield "Accept", copy.deepcopy(configuration)
@@ -112,65 +112,54 @@ class TuringMachine:
                 yield "Reject", copy.deepcopy(configuration)
                 return
 
-            #  Find Transition in Transitions:
-            if ((configuration["state"], configuration["symbol"]) in self.transitions):
-                # Extract Transition component:
-                next_state , write_symbol, direction = self.transitions[(configuration["state"], configuration["symbol"])]
-                
-                # Update Config:
-                configuration["symbol"] = write_symbol
-                configuration["state"] = next_state
-
-                # Move: Right
-                if(direction == "R"):
-                    # Push current cell to the left side of the tape:
-                    configuration["left_hand_side"].insert(
-                        0,
-                        configuration["symbol"]
-                    )
-
-                    # Move to right:
-                    if configuration["right_hand_side"]:
-                        configuration["symbol"] = configuration["right_hand_side"].pop(0)
-                    # Empty right:
-                    else:
-                        configuration["symbol"] = self.blank_symbol
-
-                # Move Left:
-                elif direction == "L":
-                    # Push Current cell to the right side of the tape:
-                    configuration["right_hand_side"].insert(
-                        0,
-                        configuration["symbol"]
-                    )
-
-                    # Move to left:
-                    if configuration["left_hand_side"]:
-                        configuration["symbol"] = configuration["left_hand_side"].pop(0)
-                    # Empty left:
-                    else:
-                        # in Todo: Log a warning using logging.warning()
-                        logging.warning(
-                            "Crossed the left boundary of singly-infinite tape."
-                        )
-                        configuration["symbol"] = self.blank_symbol
-
-                # if  invalid Transition:
-                else:
-                    raise ValueError(
-                        f"Unknown direction: {direction}"
-                    )
-
-                yield None, copy.deepcopy(configuration)
-                    
-            
-            else:
+            # NotFound Transition in Transitions:
+            if (configuration["state"], configuration["symbol"]) not in self.transitions:
                 yield "Reject", copy.deepcopy(configuration)
                 return
-
-
-
         
+            # Extract Transition component:
+            next_state , write_symbol, direction = self.transitions[(configuration["state"], configuration["symbol"])]
+                
+            # Update Config:
+            configuration["symbol"] = write_symbol
+            configuration["state"] = next_state
+
+            # Move: Right
+            if(direction == "R"):
+                # Push current cell to the left side of the tape:
+                configuration["left_hand_side"].append(configuration["symbol"])
+
+                # Move to right:
+                if configuration["right_hand_side"]:
+                    configuration["symbol"] = configuration["right_hand_side"].pop(0)
+                # Empty right:
+                else:
+                    configuration["symbol"] = self.blank_symbol
+
+            # Move Left:
+            elif direction == "L":
+                # Push Current cell to the right side of the tape:
+                configuration["right_hand_side"].insert(0, configuration["symbol"])
+
+                # Move to left:
+                if configuration["left_hand_side"]:
+                    configuration["symbol"] = configuration["left_hand_side"].pop()
+                # Empty left:
+                else:
+                    # in Todo: Log a warning using logging.warning()
+                    logging.warning(
+                        "Crossed the left boundary of singly-infinite tape."
+                    )
+                    configuration["symbol"] = self.blank_symbol
+
+            # if  invalid Transition:
+            else:
+                raise ValueError(
+                    f"Unknown direction: {direction}"
+                )
+
+            
+            yield None, copy.deepcopy(configuration)
 
 
     def accepts(self, input_, step_limit=100):
@@ -206,12 +195,12 @@ class TuringMachine:
         :param input_: the input string or list.
         :return: True if the machine rejects the string, False if it accepts.
         """
-        
-        if(self.accepts(input_, **kwargs) is None):
+        result = self.accepts(input_, **kwargs)
+
+        if result is None:
             return None
-        
-        else:
-            return not self.accepts(input_, **kwargs)
+
+        return not result
 
     def debug(self, input_, step_limit=100, colored=False):
         """Print the execution configuration of the machine per transition for debugging.
