@@ -86,22 +86,46 @@ class TuringMachine(object):
 beaver_programs = [
     { },
     {
-        # TODO: Implement 1-state Busy Beaver program
+        'a0': ('h', '1', 'r')
     },
     {
-        # TODO: Implement 2-state Busy Beaver program
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('a', '1', 'l'),
+        'b1': ('h', '1', 'r')
     },
     {
-        # TODO: Implement 3-state Busy Beaver program
+        'a0': ('b', '1', 'r'),
+        'a1': ('h', '1', 'r'),
+        'b0': ('c', '0', 'r'),
+        'b1': ('b', '1', 'r'),
+        'c0': ('c', '1', 'l'),
+        'c1': ('a', '1', 'l')
     },
     {
-        # TODO: Implement 4-state Busy Beaver program
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('a', '1', 'l'),
+        'b1': ('c', '0', 'l'),
+        'c0': ('h', '1', 'r'),
+        'c1': ('d', '1', 'l'),
+        'd0': ('d', '1', 'r'),
+        'd1': ('a', '0', 'r')
     },
     {
-        # TODO: Implement 5-state Busy Beaver program
+        'a0': ('b', '1', 'r'),
+        'a1': ('c', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('b', '1', 'r'),
+        'c0': ('d', '1', 'r'),
+        'c1': ('e', '0', 'l'),
+        'd0': ('a', '1', 'l'),
+        'd1': ('d', '1', 'l'),
+        'e0': ('h', '1', 'r'),
+        'e1': ('a', '0', 'l')
     },
     {
-        # TODO: Implement 6-state Busy Beaver program
+        # 6-state is currently unproven/unknown max, leaving empty
     }
 ]
 
