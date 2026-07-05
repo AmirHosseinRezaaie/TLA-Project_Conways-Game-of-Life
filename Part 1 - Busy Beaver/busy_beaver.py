@@ -86,10 +86,11 @@ class TuringMachine(object):
 beaver_programs = [
     { },
     {
+        # BB(1):
         'a0': ('h', '1', 'r') # wasn't neccessary to implement this, but was done anyways since it was verry simple.
     },
     {
-        # writes 4 '1's:
+        # BB(2): (writes 4 '1's)
         'a0': ('b', '1', 'r'),
         'a1': ('b', '1', 'l'),
         'b0': ('a', '1', 'l'),
@@ -104,7 +105,7 @@ beaver_programs = [
         # 'c0': ('c', '1', 'l'),
         # 'c1': ('a', '1', 'l') 
     
-        # our edition: (9 steps, writes 5 '1's)
+        # our BB(3): (9 steps, writes 5 '1's)
         'a0': ('b', '1', 'r'),
         'a1': ('b', '1', 'l'),
         'b0': ('c', '1', 'r'),
@@ -114,16 +115,27 @@ beaver_programs = [
         
     },
     {
-        ''' This is the champion 4-state busy beaver machine:
-        'a0': ('b', '1', 'r'),
-        'a1': ('b', '1', 'l'),
-        'b0': ('a', '1', 'l'),
-        'b1': ('c', '0', 'l'),
-        'c0': ('h', '1', 'r'),
-        'c1': ('d', '1', 'l'),
-        'd0': ('d', '1', 'r'),
-        'd1': ('a', '0', 'r')
-        '''
+        # This is the champion 4-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('b', '1', 'l'),
+        # 'b0': ('a', '1', 'l'),
+        # 'b1': ('c', '0', 'l'),
+        # 'c0': ('h', '1', 'r'),
+        # 'c1': ('d', '1', 'l'),
+        # 'd0': ('d', '1', 'r'),
+        # 'd1': ('a', '0', 'r')
+
+        # our BB(4): 
+        'a0': ('b','1','r'),
+        'a1': ('b','1','l'),
+        'b0': ('c','1','r'),
+        'b1': ('','',''),
+        'c0': ('d','1','r'),
+        'c1': ('','',''),
+        'd0': ('a','1','l'),
+        'd1': ('','','')
+
+        
     },
     {
         ''' This is the champion 5-state busy beaver machine:
@@ -146,7 +158,7 @@ beaver_programs = [
 
 def busy_beaver(n):
     def tape_callback(tape, tape_changed):
-        if tape_changed:
+        if tape_changed: # Remove this line if you want to see every single step, for now not neccessary
             # We access `tm.pos` to place brackets around the active symbol
             left = ''.join(tape[:tm.pos])
             head = f"[{tape[tm.pos]}]"
