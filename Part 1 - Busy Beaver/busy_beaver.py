@@ -126,30 +126,29 @@ beaver_programs = [
         # 'd1': ('a', '0', 'r')
 
         # our BB(4): 
-        'a0': ('b','1','r'),
-        'a1': ('b','1','l'),
-        'b0': ('c','1','r'),
-        'b1': ('','',''),
-        'c0': ('d','1','r'),
-        'c1': ('','',''),
-        'd0': ('a','1','l'),
-        'd1': ('','','')
-
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('a', '1', 'l'),
+        'c1': ('d', '1', 'l'),
+        'd0': ('h', '1', 'l'),
+        'd1': ('h', '1', 'l')
         
     },
     {
-        ''' This is the champion 5-state busy beaver machine:
-        'a0': ('b', '1', 'r'),
-        'a1': ('c', '1', 'l'),
-        'b0': ('c', '1', 'r'),
-        'b1': ('b', '1', 'r'),
-        'c0': ('d', '1', 'r'),
-        'c1': ('e', '0', 'l'),
-        'd0': ('a', '1', 'l'),
-        'd1': ('d', '1', 'l'),
-        'e0': ('h', '1', 'r'),
-        'e1': ('a', '0', 'l')
-        '''
+        # This is the champion 5-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('c', '1', 'l'),
+        # 'b0': ('c', '1', 'r'),
+        # 'b1': ('b', '1', 'r'),
+        # 'c0': ('d', '1', 'r'),
+        # 'c1': ('e', '0', 'l'),
+        # 'd0': ('a', '1', 'l'),
+        # 'd1': ('d', '1', 'l'),
+        # 'e0': ('h', '1', 'r'),
+        # 'e1': ('a', '0', 'l')
+        
     },
     {
         # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
@@ -190,5 +189,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(3)
+    busy_beaver(4)
 
