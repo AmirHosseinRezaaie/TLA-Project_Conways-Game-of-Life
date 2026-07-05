@@ -86,23 +86,35 @@ class TuringMachine(object):
 beaver_programs = [
     { },
     {
-        'a0': ('h', '1', 'r')
+        'a0': ('h', '1', 'r') # wasn't neccessary to implement this, but was done anyways since it was verry simple.
     },
     {
+        # writes 4 '1's:
         'a0': ('b', '1', 'r'),
         'a1': ('b', '1', 'l'),
         'b0': ('a', '1', 'l'),
         'b1': ('h', '1', 'r')
     },
     {
+        ''' This is the champion 3-state busy beaver machine:
         'a0': ('b', '1', 'r'),
         'a1': ('h', '1', 'r'),
         'b0': ('c', '0', 'r'),
         'b1': ('b', '1', 'r'),
         'c0': ('c', '1', 'l'),
-        'c1': ('a', '1', 'l')
+        'c1': ('a', '1', 'l') 
+        '''
+        # our edition: (9 steps, writes 5 '1's)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('a', '1', 'l'),
+        'c1': ('h', '1', 'l')
+        
     },
     {
+        ''' This is the champion 4-state busy beaver machine:
         'a0': ('b', '1', 'r'),
         'a1': ('b', '1', 'l'),
         'b0': ('a', '1', 'l'),
@@ -111,8 +123,10 @@ beaver_programs = [
         'c1': ('d', '1', 'l'),
         'd0': ('d', '1', 'r'),
         'd1': ('a', '0', 'r')
+        '''
     },
     {
+        ''' This is the champion 5-state busy beaver machine:
         'a0': ('b', '1', 'r'),
         'a1': ('c', '1', 'l'),
         'b0': ('c', '1', 'r'),
@@ -123,6 +137,7 @@ beaver_programs = [
         'd1': ('d', '1', 'l'),
         'e0': ('h', '1', 'r'),
         'e1': ('a', '0', 'l')
+        '''
     },
     {
         # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
