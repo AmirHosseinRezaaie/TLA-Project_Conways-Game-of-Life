@@ -96,14 +96,14 @@ beaver_programs = [
         'b1': ('h', '1', 'r')
     },
     {
-        ''' This is the champion 3-state busy beaver machine:
-        'a0': ('b', '1', 'r'),
-        'a1': ('h', '1', 'r'),
-        'b0': ('c', '0', 'r'),
-        'b1': ('b', '1', 'r'),
-        'c0': ('c', '1', 'l'),
-        'c1': ('a', '1', 'l') 
-        '''
+        # This is the champion 3-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('h', '1', 'r'),
+        # 'b0': ('c', '0', 'r'),
+        # 'b1': ('b', '1', 'r'),
+        # 'c0': ('c', '1', 'l'),
+        # 'c1': ('a', '1', 'l') 
+    
         # our edition: (9 steps, writes 5 '1's)
         'a0': ('b', '1', 'r'),
         'a1': ('b', '1', 'l'),
@@ -178,5 +178,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(2)
+    busy_beaver(3)
 
