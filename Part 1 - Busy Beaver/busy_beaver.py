@@ -86,29 +86,83 @@ class TuringMachine(object):
 beaver_programs = [
     { },
     {
-        # TODO: Implement 1-state Busy Beaver program
+        # BB(1):
+        'a0': ('h', '1', 'r') # wasn't neccessary to implement this, but was done anyways since it was verry simple.
     },
     {
-        # TODO: Implement 2-state Busy Beaver program
+        # BB(2): (writes 4 '1's)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('a', '1', 'l'),
+        'b1': ('h', '1', 'r')
     },
     {
-        # TODO: Implement 3-state Busy Beaver program
+        # This is the champion 3-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('h', '1', 'r'),
+        # 'b0': ('c', '0', 'r'),
+        # 'b1': ('b', '1', 'r'),
+        # 'c0': ('c', '1', 'l'),
+        # 'c1': ('a', '1', 'l') 
+    
+        # our BB(3): (9 steps, writes 5 '1's)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('a', '1', 'l'),
+        'c1': ('h', '1', 'l')
+        
     },
     {
-        # TODO: Implement 4-state Busy Beaver program
+        # This is the champion 4-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('b', '1', 'l'),
+        # 'b0': ('a', '1', 'l'),
+        # 'b1': ('c', '0', 'l'),
+        # 'c0': ('h', '1', 'r'),
+        # 'c1': ('d', '1', 'l'),
+        # 'd0': ('d', '1', 'r'),
+        # 'd1': ('a', '0', 'r')
+
+        # our BB(4): (10 steps, 6 `1`s)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('a', '1', 'l'),
+        'c1': ('d', '1', 'l'),
+        'd0': ('h', '1', 'l'),
+        'd1': ('h', '1', 'l')
+        
     },
     {
-        # TODO: Implement 5-state Busy Beaver program
+        # This is the champion 5-state busy beaver machine:
+        # 'a0': ('b', '1', 'r'),
+        # 'a1': ('c', '1', 'l'),
+        # 'b0': ('c', '1', 'r'),
+        # 'b1': ('b', '1', 'r'),
+        # 'c0': ('d', '1', 'r'),
+        # 'c1': ('e', '0', 'l'),
+        # 'd0': ('a', '1', 'l'),
+        # 'd1': ('d', '1', 'l'),
+        # 'e0': ('h', '1', 'r'),
+        # 'e1': ('a', '0', 'l')
+        
     },
     {
-        # TODO: Implement 6-state Busy Beaver program
+        # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
     }
 ]
 
 def busy_beaver(n):
     def tape_callback(tape, tape_changed):
-        if tape_changed:
-            print(''.join(tape))
+        if tape_changed: # Remove this line if you want to see every single step, for now not neccessary
+            # We access `tm.pos` to place brackets around the active symbol
+            left = ''.join(tape[:tm.pos])
+            head = f"[{tape[tm.pos]}]"
+            right = ''.join(tape[tm.pos+1:])
+            print(f"{tm.state}: {left}{head}{right}")
 
     program = beaver_programs[n]
 
@@ -135,5 +189,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(5)
+    busy_beaver(4)
 
