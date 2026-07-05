@@ -147,7 +147,11 @@ beaver_programs = [
 def busy_beaver(n):
     def tape_callback(tape, tape_changed):
         if tape_changed:
-            print(''.join(tape))
+            # We access `tm.pos` to place brackets around the active symbol
+            left = ''.join(tape[:tm.pos])
+            head = f"[{tape[tm.pos]}]"
+            right = ''.join(tape[tm.pos+1:])
+            print(f"{tm.state}: {left}{head}{right}")
 
     program = beaver_programs[n]
 
@@ -174,5 +178,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(5)
+    busy_beaver(2)
 
