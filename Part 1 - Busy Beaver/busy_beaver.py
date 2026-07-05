@@ -125,7 +125,7 @@ beaver_programs = [
         'e1': ('a', '0', 'l')
     },
     {
-        # 6-state is currently unproven/unknown max, leaving empty
+        # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
     }
 ]
 
