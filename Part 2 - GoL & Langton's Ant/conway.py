@@ -9,21 +9,78 @@ from scipy import signal, ndimage
 
 
 def parse_pattern(filepath):
-    """
-    TODO: [Part 1d - RLE/Plaintext Parser]
-    Write a parser for Run Length Encoded (RLE) or Plaintext (.cells) patterns
-    so grids larger than 20x20 can be loaded.
+    live_cells = []
+    width = 0
+    height = 0
     
-    Args:
-        filepath (str): Path to the pattern file.
+    with open(filepath, 'r') as file:
+        lines = file.readlines()
         
-    Returns:
-        tuple: (width, height, list of (r, c) offsets of live cells)
-    """
-    # Student TODO: Implement parser here
-    pass
-
-
+    if filepath.endswith('.cells'):
+        row_idx = 0
+        for line in lines:
+            line = line.strip()
+            if line.startswith('!') or len(line) == 0:
+                continue
+            
+            if len(line) > width:
+                width = len(line)
+                
+            col_idx = 0
+            for char in line:
+                if char == 'O' or char == 'o':
+                    live_cells.append((row_idx, col_idx))
+                col_idx += 1
+            row_idx += 1
+        height = row_idx
+        
+    elif filepath.endswith('.rle'):
+        row_idx = 0
+        col_idx = 0
+        pattern_data = ""
+        
+        for line in lines:
+            line = line.strip()
+            if line.startswith('#') or len(line) == 0:
+                continue
+            if line.startswith('x'):
+                parts = line.split(',')
+                width_part = parts[0].split('=')[1]
+                width = int(width_part.strip())
+                height_part = parts[1].split('=')[1]
+                height = int(height_part.strip())
+                continue
+            pattern_data += line
+            
+        count_str = ""
+        for char in pattern_data:
+            if char.isdigit():
+                count_str += char
+            elif char == 'b':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                col_idx += num
+                count_str = ""
+            elif char == 'o':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                for _ in range(num):
+                    live_cells.append((row_idx, col_idx))
+                    col_idx += 1
+                count_str = ""
+            elif char == '$':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                row_idx += num
+                col_idx = 0
+                count_str = ""
+            elif char == '!':
+                break
+                
+    return width, height, live_cells
 class GameOfLife:
     """
     Object for computing Conway's Game of Life (GoL) cellular machine/automata
