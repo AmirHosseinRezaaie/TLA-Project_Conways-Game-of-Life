@@ -29,7 +29,7 @@ class GameOfLife:
     Object for computing Conway's Game of Life (GoL) cellular machine/automata
     """
 
-    def __init__(self, N=256, finite=False, fastMode=True):
+    def __init__(self, N=256, finite=False, fastMode=False):
         self.grid = np.zeros((N, N), np.uint)
         self.neighborhood = np.ones((3, 3), np.uint)  # 8 connected kernel
         self.neighborhood[1, 1] = 0  # do not count centre pixel
@@ -65,7 +65,7 @@ class GameOfLife:
             np.ndarray: The next 2D grid of states.
         """
         # Student TODO: Implement fast 2D convolution method
-        pass
+        return grid
 
     def evolve(self):
         """
@@ -78,13 +78,32 @@ class GameOfLife:
         if self.fastMode:
             self.grid = self.update_grid_fast(self.grid)
         else:
-            # TODO: [Part 1a - Core Rules]
-            # Remove the transition logic and implement the 4 standard GoL rules
-            # (Underpopulation, Survival, Overpopulation, Reproduction) by iterating 
-            # through the cells cell-by-cell. Handle self.finite wrapping appropriately.
-            
-            # Student TODO: Implement slow update cell-by-cell logic here
-            pass
+            next_grid = np.zeros((self.rows, self.cols), dtype=np.uint)
+            for r in range(self.rows):
+                for c in range(self.cols):
+                    live_neighbors = 0
+                    for dr in [-1, 0, 1]:
+                        for dc in [-1, 0, 1]:
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr = r + dr
+                            nc = c + dc
+                            if self.finite:
+                                if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                                    if self.grid[nr, nc] == 1:
+                                        live_neighbors += 1
+                            else:
+                                nr = nr % self.rows
+                                nc = nc % self.cols
+                                if self.grid[nr, nc] == 1:
+                                    live_neighbors += 1
+                    if self.grid[r, c] == 1:
+                        if live_neighbors == 2 or live_neighbors == 3:
+                            next_grid[r, c] = 1
+                    else:
+                        if live_neighbors == 3:
+                            next_grid[r, c] = 1
+            self.grid = next_grid
 
     def insertBlinker(self, index=(0, 0)):
         '''
