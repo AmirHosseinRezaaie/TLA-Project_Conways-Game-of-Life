@@ -532,3 +532,174 @@ which corresponds to:
 After removing the separator, the simulator moves the tape head back to the beginning before entering the accept state. This behavior prepares the tape for possible subsequent computations.
 
 During execution on the current singly-infinite tape implementation, moving left beyond the initial tape boundary produces a warning. This behavior is expected according to the project specification and will be eliminated after implementing the two-way infinite tape extension in the next phase.
+
+---
+
+# Unary Multiplication Turing Machine
+
+## Unary Representation
+
+This machine computes the multiplication of two unary numbers.
+
+The input format is:
+
+```
+1...10 1...
+```
+
+where:
+
+- `1` represents one unit.
+- `0` separates the two operands.
+
+Examples:
+
+| Arithmetic Expression | Unary Input |
+|----------------------|-------------|
+| 2 × 3 | `110111` |
+| 3 × 4 | `11101111` |
+| 0 × 4 | `01111` |
+
+---
+
+## Tape Symbols
+
+Besides the input symbols (`1` and `0`), the machine uses three temporary markers during execution.
+
+| Symbol | Purpose |
+|--------|---------|
+| `A` | Marks processed symbols in the left operand. |
+| `B` | Temporarily marks symbols of the right operand while copying. |
+| `C` | Stores generated symbols in the result area. |
+
+All temporary symbols are removed before the machine halts.
+
+---
+
+## Multiplication Algorithm
+
+The machine implements multiplication using repeated addition.
+
+For every `1` in the left operand:
+
+1. Mark the current symbol with `A`.
+2. Move to the right operand.
+3. Replace each unprocessed `1` with `B`.
+4. Append one new symbol (`C`) to the end of the tape.
+5. Restore every `B` back to `1`.
+6. Return to the beginning.
+7. Repeat until every symbol in the left operand has been processed.
+8. Remove the original operands and temporary markers.
+9. Convert every `C` into `1`.
+10. Halt in the accept state.
+
+---
+
+## Machine States
+
+| State | Purpose |
+|--------|---------|
+| `q0` | Select the next symbol of the left operand. |
+| `q1` | Move to the separator. |
+| `q2` | Mark symbols of the right operand. |
+| `q3` | Restore one marked symbol. |
+| `q4` | Append a result symbol. |
+| `q5` | Continue copying remaining symbols. |
+| `q6` | Return to the beginning of the tape. |
+| `q7` | Start the cleanup phase. |
+| `q8` | Remove temporary symbols and finalize the result. |
+| `qa` | Accept state. |
+
+---
+
+## Example Execution
+
+### Example 1
+
+Input:
+
+```
+110111
+```
+
+Initial tape:
+
+```
+11 0 111
+```
+
+Final tape:
+
+```
+111111
+```
+
+which represents:
+
+```
+2 × 3 = 6
+```
+
+---
+
+### Example 2
+
+Input:
+
+```
+11101111
+```
+
+Final tape:
+
+```
+111111111111
+```
+
+which represents:
+
+```
+3 × 4 = 12
+```
+
+---
+
+### Example 3
+
+Input:
+
+```
+01111
+```
+
+Final tape:
+
+```
+(empty tape)
+```
+
+which represents:
+
+```
+0 × 4 = 0
+```
+
+---
+
+## Test Cases
+
+| Input | Arithmetic | Output Tape | Result |
+|------|------------|-------------|--------|
+| `110111` | 2 × 3 | `111111` | Accepted |
+| `11101111` | 3 × 4 | `111111111111` | Accepted |
+| `01111` | 0 × 4 | *(empty)* | Accepted |
+
+---
+
+## Discussion
+
+The machine performs unary multiplication by repeatedly copying the second operand once for each symbol in the first operand.
+
+Temporary markers (`A`, `B`, and `C`) simplify tracking processed symbols during execution. Before halting, the cleanup phase removes every temporary marker and restores the tape so that only the unary product remains.
+
+If the left operand is zero, the machine skips the multiplication process and directly clears the tape, producing the correct unary representation of zero.
