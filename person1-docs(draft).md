@@ -280,3 +280,78 @@ The simulator is completely generic.
 Different Turing Machines can be executed without modifying the simulator.
 
 Only the transition table needs to change.
+
+---
+
+# Testing
+
+The simulator was tested using the provided examples and the self-check script.
+
+## Example Test 1
+
+A simple machine that accepts only the string:
+
+```
+##
+```
+
+Results:
+
+- `##` → Accepted
+- `101031##` → Rejected
+- `######` → Rejected
+- `#####` → Rejected
+- `#_#_` → Rejected
+
+The execution trace produced by `debug()` matched the expected state transitions.
+
+---
+
+## Example Test 2
+
+A more complex transition table was tested.
+
+This machine compares symbols around the `#` delimiter and replaces matched symbols with `X`.
+
+Verified examples:
+
+- `#` → Accepted
+- `0#XXXX0` → Accepted
+- `1#XXXX1` → Accepted
+- `11#XXXX11` → Accepted
+- `01#XXXX01` → Accepted
+- `01#01` → Accepted
+- `101#101` → Accepted
+
+Rejected examples:
+
+- `0000#XXXX1`
+- `0111#XXXX1`
+- `0111#XXXX0`
+- `11#XXXX1`
+
+The final tape contents also matched the expected results (e.g. `XX#XX` and `XXX#XXX`).
+
+---
+
+## Student Self-Test
+
+The implementation successfully passed all provided self-check tests.
+
+Verified features:
+
+- successful module import
+- accept/reject interface
+- generator-based execution
+- configuration dictionary format
+- tape boundary handling
+
+The simulator completed every test without runtime errors.
+
+---
+
+## Overall Result
+
+All provided tests passed successfully.
+
+The simulator correctly executes deterministic Turing Machines, follows the supplied transition table, updates the tape correctly, and provides step-by-step execution through the generator interface.
