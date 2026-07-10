@@ -231,6 +231,89 @@ Useful for:
 
 ---
 
+## Example 1 Analysis
+
+**Purpose**
+
+This example accepts only the input `##`.
+
+### States
+
+| State | Purpose |
+|-------|---------|
+| `q0` | Initial state |
+| `saw_#` | First `#` has been read |
+| `saw_##` | Second `#` has been read |
+| `qa` | Accept state |
+
+### Behavior
+
+Accepted input:
+
+```text
+##
+```
+
+Rejected examples:
+
+```text
+#
+###
+######
+101031##
+#_#_
+```
+
+The machine checks that the tape contains exactly two `#` symbols and nothing else. Any additional or missing symbol causes the machine to reject the input.
+
+---
+
+## Example 2 Analysis
+
+**Purpose**
+
+This example verifies that the strings before and after the `#` delimiter are identical.
+
+### States
+
+| State | Purpose |
+|-------|---------|
+| `q0` | Initial state |
+| `FindDelimiter0` | Search for the delimiter after reading `0` |
+| `FindDelimiter1` | Search for the delimiter after reading `1` |
+| `Check0` | Verify a matching `0` |
+| `Check1` | Verify a matching `1` |
+| `FindLeftmost` | Return to the beginning of the tape |
+| `FindNext` | Find the next unchecked symbol |
+| `End` | Verify that all symbols have been processed |
+| `qa` | Accept state |
+
+### Behavior
+
+Accepted examples:
+
+```text
+#
+0#XXXX0
+1#XXXX1
+11#XXXX11
+01#01
+101#101
+```
+
+Rejected examples:
+
+```text
+0000#XXXX1
+0111#XXXX1
+0111#XXXX0
+11#XXXX1
+```
+
+During execution, every matched symbol is replaced with `X`. The machine accepts only when every symbol before the delimiter has a matching symbol after the delimiter and the entire input has been successfully processed.
+
+---
+
 ## Error Handling
 
 Implemented checks:
@@ -355,3 +438,97 @@ The simulator completed every test without runtime errors.
 All provided tests passed successfully.
 
 The simulator correctly executes deterministic Turing Machines, follows the supplied transition table, updates the tape correctly, and provides step-by-step execution through the generator interface.
+
+---
+
+## Unary Addition Turing Machine
+
+### Unary Representation
+
+In this project, non-negative integers are represented using unary notation. Each number is encoded as a sequence of `1` symbols, while the separator between the two operands is represented by the symbol `0`.
+
+Examples:
+
+| Arithmetic Expression | Unary Input |
+|----------------------|-------------|
+| 2 + 3 | `110111` |
+| 3 + 4 | `11101111` |
+| 0 + 3 | `0111` |
+
+The blank symbol is represented by the empty string (`''`).
+
+---
+
+### Addition Algorithm
+
+The unary addition machine follows a simple strategy:
+
+1. Start from the beginning of the tape.
+2. Move the head to the right until the separator (`0`) is found.
+3. Remove the separator by replacing it with the blank symbol.
+4. Move the head back toward the beginning of the tape.
+5. Halt in the accept state.
+
+Since removing the separator concatenates the two unary numbers, the resulting tape directly represents the sum of the two operands.
+
+---
+
+### Machine States
+
+| State | Purpose |
+|--------|---------|
+| `q0` | Scan the first operand until the separator is reached. |
+| `q_back` | Return the tape head to the beginning of the tape. |
+| `qa` | Accept state. |
+
+---
+
+### Example Execution
+
+Input:
+
+```
+110111
+```
+
+Initial tape:
+
+```
+11 0 111
+```
+
+After removing the separator:
+
+```
+11111
+```
+
+Final tape:
+
+```
+11111
+```
+
+which corresponds to:
+
+```
+2 + 3 = 5
+```
+
+---
+
+### Test Cases
+
+| Input | Arithmetic | Output Tape | Result |
+|------|------------|-------------|--------|
+| `110111` | 2 + 3 | `11111` | Accepted |
+| `11101111` | 3 + 4 | `1111111` | Accepted |
+| `0111` | 0 + 3 | `111` | Accepted |
+
+---
+
+### Discussion
+
+After removing the separator, the simulator moves the tape head back to the beginning before entering the accept state. This behavior prepares the tape for possible subsequent computations.
+
+During execution on the current singly-infinite tape implementation, moving left beyond the initial tape boundary produces a warning. This behavior is expected according to the project specification and will be eliminated after implementing the two-way infinite tape extension in the next phase.
