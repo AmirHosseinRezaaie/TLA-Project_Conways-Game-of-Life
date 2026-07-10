@@ -2,17 +2,85 @@
 from turing_machine import TuringMachine
 from test_turing_machine_example1 import print_states
 
-#create the Turing machine
 transitions = {
-        # TODO: Part II b) - Write your transition rules here as entries to a Python dictionary
-        # For example, the key will be a pair (state, character)
-        # The value will be the triple (next state, character to write, move head L or R)
-        # such as ('q0', '1'): ('q1', '0', 'R'), which says if current state is q0 and 1 encountered
-        # then transition to state q1, write a 0 and move head right.
+
+    # ---------- q0 ----------
+    ('q0', '1'): ('q0', '1', 'R'),
+    ('q0', '0'): ('q1', '0', 'R'),
+
+    # ---------- q1 ----------
+    ('q1', '1'): ('q1', '1', 'R'),
+    ('q1', ''): ('q2', '0', 'L'),
+
+    # ---------- q2 ----------
+    ('q2', '1'): ('q2', '1', 'L'),
+    ('q2', '0'): ('q3', '0', 'R'),
+
+    # ---------- q3 ----------
+    ('q3', 'X'): ('q3', 'X', 'R'),
+    ('q3', '1'): ('q4', 'X', 'L'),
+    ('q3', '0'): ('q12', '1', 'R'),
+    ('q3', 'Y'): ('q3', 'Y', 'R'),
+
+    # ---------- q4 ----------
+    ('q4', 'X'): ('q4', 'X', 'L'),
+    ('q4', '0'): ('q5', '0', 'L'),
+    ('q4','Y'): ('q4','Y','L'),
+
+    # ---------- q5 ----------
+    ('q5', 'Y'): ('q5', 'Y', 'L'),
+    ('q5', '1'): ('q6', 'Y', 'R'),
+    ('q5', ''): ('q11', '', 'R'),
+    ('q5','X'): ('q5','X','L'),
+    ('q5','0'): ('q5','0','L'),
+
+    # ---------- q6 ----------
+    ('q6', 'Y'): ('q6', 'Y', 'R'),
+    ('q6', '0'): ('q7', '0', 'R'),
+    ('q6','1'): ('q6','1','R'),
+    ('q6','X'): ('q6','X','R'),
+
+    # ---------- q7 ----------
+    ('q7', '1'): ('q7', '1', 'R'),
+    ('q7', 'X'): ('q7', 'X', 'R'),
+    ('q7', '0'): ('q8', '0', 'R'),
+    ('q7','Y'): ('q7','Y','R'),
+    ('q7',''): ('q8','','R'),
+
+    # ---------- q8 ----------
+    ('q8', '1'): ('q8', '1', 'R'),
+    ('q8', ''): ('q9', '1', 'L'),
+    ('q8','X'): ('q8','X','R'),
+    ('q8','Y'): ('q8','Y','R'),
+
+    # ---------- q9 ----------
+    ('q9', '1'): ('q9', '1', 'L'),
+    ('q9', '0'): ('q10', '0', 'L'),
+    ('q9','X'): ('q9','X','L'),
+    ('q9','Y'): ('q9','Y','L'),
+
+    # ---------- q10 ----------
+    ('q10', '1'): ('q10', '1', 'L'),
+    ('q10', 'X'): ('q10', 'X', 'L'),
+    ('q10', '0'): ('q5', '0', 'L'),
+    ('q10','Y'): ('q10','Y','L'),
+
+    # ---------- q11 ----------
+    ('q11','Y'): ('q11','1','R'),
+    ('q11','X'): ('q11','X','R'),
+    ('q11','1'): ('q11','1','R'),
+    ('q11','0'): ('q3','0','R'),
+    ('q11',''): ('q3','','R'),
+
 }
+
 if __name__ == "__main__":
     print_states(transitions)
-    machine = TuringMachine(transitions)
+    machine = TuringMachine(
+        transitions,
+        start_state='q0',
+        accept_state='q12'
+    )
 
     def run(input_):
         w = input_
