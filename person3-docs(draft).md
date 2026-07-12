@@ -72,7 +72,7 @@ Our own editon of BB(3) and BB(4) was implemented. The numbers of `1`s produced 
 For BB(3): 9 steps and 5 `1`s.
 For BB(4): 10 steps and 6 `1`s.
 
-### Task 3g: Attempt 5-Card Busy Beaver
+### Task 3g: Attempt 5-Card Busy Beaver (*continue here*)
 *Responsible for:* me.
 
 Try to find or create a 5-state Busy Beaver machine:
@@ -96,3 +96,8 @@ Definitly no.
 - 2-card champion: BB(2) = 6
 - 3-card champion: BB(3) = 21
 - 4-card champion: BB(4) = 107
+
+
+
+### Notes:
+The given link was broken, wroking link: https://en.wikipedia.org/wiki/Busy_beaver#Known_values_for_%CE%A3_and_S
