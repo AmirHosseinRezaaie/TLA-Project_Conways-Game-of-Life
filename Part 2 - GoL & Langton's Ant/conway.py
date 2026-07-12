@@ -129,7 +129,15 @@ class GameOfLife:
         next_grid[(grid == 0) & (neighbors == 3)] = 1
         
         return next_grid
-
+    def tick(self):
+        """
+        Advances the game by one generation.
+        """
+        if self.fastMode:
+            self.grid = self.update_grid_fast(self.grid)
+        else:
+            self.evolve()
+    
     def evolve(self):
         """
         Given the current states of the cells, apply the GoL rules:
