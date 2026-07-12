@@ -146,10 +146,10 @@ class TuringMachine:
                     configuration["symbol"] = configuration["left_hand_side"].pop()
                 # Empty left:
                 else:
-                    # in Todo: Log a warning using logging.warning()
-                    logging.warning(
-                        "Crossed the left boundary of singly-infinite tape."
-                    )
+                    # in Todo: Log a warning using logging.warning() => BUT WE DON'T LIKE IT
+                    # logging.warning(
+                    #     "Crossed the left boundary of singly-infinite tape."
+                    # )
                     configuration["symbol"] = self.blank_symbol
 
             # if  invalid Transition:
