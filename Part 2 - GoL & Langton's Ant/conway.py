@@ -6,6 +6,8 @@ This module defines the classes required for the GoL simulation.
 """
 import numpy as np
 from scipy import signal, ndimage
+from scipy.signal import convolve2d
+"برای حالت بهینه سازی و سریع"
 
 
 def parse_pattern(filepath):
@@ -86,7 +88,7 @@ class GameOfLife:
     Object for computing Conway's Game of Life (GoL) cellular machine/automata
     """
 
-    def __init__(self, N=256, finite=False, fastMode=False):
+    def __init__(self, N=256, finite=False, fastMode=True):
         self.grid = np.zeros((N, N), np.uint)
         self.neighborhood = np.ones((3, 3), np.uint)  # 8 connected kernel
         self.neighborhood[1, 1] = 0  # do not count centre pixel
@@ -110,19 +112,23 @@ class GameOfLife:
         return self.getStates()
 
     def update_grid_fast(self, grid):
-        """
-        TODO: [Part 1e - Fast Convolution]
-        Use scipy.signal.convolve2d (or similar) to compute neighbor weights
-        rapidly for large grids (N > 1024).
+        kernel = np.array([[1, 1, 1],
+                           [1, 0, 1],
+                           [1, 1, 1]])
         
-        Args:
-            grid (np.ndarray): The current 2D grid of states.
+        if self.finite:
+            mode_boundary = 'fill'
+        else:
+            mode_boundary = 'wrap'
             
-        Returns:
-            np.ndarray: The next 2D grid of states.
-        """
-        # Student TODO: Implement fast 2D convolution method
-        return grid
+        neighbors = convolve2d(grid, kernel, mode='same', boundary=mode_boundary, fillvalue=0)
+        
+        next_grid = np.zeros_like(grid)
+        
+        next_grid[(grid == 1) & ((neighbors == 2) | (neighbors == 3))] = 1
+        next_grid[(grid == 0) & (neighbors == 3)] = 1
+        
+        return next_grid
 
     def evolve(self):
         """
