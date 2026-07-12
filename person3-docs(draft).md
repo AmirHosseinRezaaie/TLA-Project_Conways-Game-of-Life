@@ -105,17 +105,24 @@ Try to find or create a 5-state Busy Beaver machine:
 Consult the Busy Beaver Wiki (https://www.sligocki.com/wiki/Busy_Beaver) and study the best known machines:
 
 - Compare 2, 3, and 4-state champion machines
+As the number of states increases, the maximum number of steps before halting grows incredibly fast (BB(2)=6, BB(3)=21, BB(4)=107). This illustrates the rapid, non-computable growth of the Busy Beaver function.
+
 - Are your machines better than the known champions? 
-Definitly no.
+Definitely no.
+
 - Implement the champion machines and verify their output
+I have implemented the champion transition tables for BB(3) and BB(4) inside `busy_beaver.py`. By running the simulator, I verified that they match the reference limits exactly: the 3-state champion halts in exactly 21 steps, and the 4-state champion halts in exactly 107 steps. right now the champion BBs are commented in the `busy_beaver.py`, in order to tesst it, comment my implemented BBs and un-comment the champion BBs.
+
 - Compare results with your designs
+  - **BB(2):** My implementation was mathematically identical to the champion machine, achieving the absolute maximum of 6 steps(Since the instruction was in the main docs).
+  - **BB(3):** My design achieved 9 steps (writing five `1`s), while the champion runs for 21 steps (writing six `1`s).
+  - **BB(4):** My sweeping pattern achieved 10 steps (writing six `1`s), which is nowhere near the champion's staggering 107 steps (writing thirteen `1`s).
+  - **Conclusion:** My designs prioritize predictable, guaranteed-to-halt sweeping patterns. The champion machines rely on highly complex, chaotic behavior to maximize execution time before halting.
 
 **Reference machines locations**:
 - 2-card champion: BB(2) = 6
 - 3-card champion: BB(3) = 21
 - 4-card champion: BB(4) = 107
 
-
-
 ### Notes:
-The given link was broken, wroking link: https://en.wikipedia.org/wiki/Busy_beaver#Known_values_for_%CE%A3_and_S
+The given link was broken, working link: https://en.wikipedia.org/wiki/Busy_beaver#Known_values_for_%CE%A3_and_S
