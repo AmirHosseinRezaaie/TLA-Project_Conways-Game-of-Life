@@ -37,6 +37,16 @@ Considerations:
 The BB(2) was implemented as instructured.
 *Quetion:* Starting with a blank tape, how many 1s does the machine produce?
 *Answer:* four `1`s (Was tested).
+*Test:* in .\TLA-Project_Conways-Game-of-Life\Part 1 - Busy Beaver\busy_beaver.py, in the last line there is busy_beaver(`n`) call, set `n`=2 and then run `python "Part 1 - Busy Beaver\busy_beaver.py" in the terminal. The result will be:
+```
+Running Busy Beaver with 2 states.
+a: [0]
+b: 1[0]
+a: [1]1
+a: [0]111
+b: 1[1]11
+Busy beaver finished in 6 steps.
+```
 
 ### Task 3e: Compare with Known Results
 *Responsible for:* me
@@ -80,6 +90,14 @@ Try to find or create a 5-state Busy Beaver machine:
 - Justify whether your machine is new or explain why it halts
 - Compare with known 5-state machines
 - Provide reasoning for your design
+
+*Answers*:
+- The machine I wrote, althouh isn't extracted from internet, isn't new. It uses a verry simple logic and writes only 8 `1`s and halts in 15 steps, so I can't say it's new, it's simple and known in the sience society. It halts because the machine builds a chain of 1s by bouncing back and forth, and once the chain reaches 8 1s long, it triggers the halt state (h) directly from state e.
+
+- There is a verry huge difference between my BB(5) and the champion BB(5) wich halts in 47,176,870 steps and leaves 4,098 ones.
+
+- I just scaled up the pattern I have used in BB(3) and BB(4) which was sweeping pattern, for BB(5). This way for sure, no world records can be moved, but at least it definitly halts.
+
 
 ### Task 3h: Research and Verify
 *Responsible for:* me.

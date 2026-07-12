@@ -136,7 +136,7 @@ beaver_programs = [
         'd1': ('h', '1', 'l')
         
     },
-    {
+    {   
         # This is the champion 5-state busy beaver machine:
         # 'a0': ('b', '1', 'r'),
         # 'a1': ('c', '1', 'l'),
@@ -148,7 +148,18 @@ beaver_programs = [
         # 'd1': ('d', '1', 'l'),
         # 'e0': ('h', '1', 'r'),
         # 'e1': ('a', '0', 'l')
-        
+
+        # our BB(5): (# steps and # `1`s)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('d', '1', 'r'),
+        'c1': ('d', '1', 'l'),
+        'd0': ('e', '1', 'r'),
+        'd1': ('e', '1', 'l'), # changed r to l
+        'e0': ('a', '1', 'l'),
+        'e1': ('h', '1', 'l')
     },
     {
         # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
@@ -189,5 +200,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(4)
+    busy_beaver(5)
 
