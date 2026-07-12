@@ -15,8 +15,7 @@ Key points to address:
 - Why brute force search becomes computationally infeasible
 - What makes this problem fundamentally non-computable
 
-
-**Explanation:** *FILL HERE*
+**Answer:** Finding Busy Beaver machines is fundamentally undecidable because it is directly tied to the Halting Problem. To find the maximum number of 1s or steps a Turing machine can produce, we must simulate all possible machines. However, Turing proved there is no general algorithm that can determine if an arbitrary program will eventually halt or loop infinitely. Because of this, a brute force search is computationally infeasible—we never know if we should keep waiting for a long-running machine to halt (like the 47-million step BB(5)) or abandon it because it's stuck in an infinite loop. This reliance on solving the Halting Problem makes the Busy Beaver function fundamentally non-computable.
 
 ### Task 3b - Implement Two-Way Infinite Tape
 (Modify turing_machine.py)

@@ -200,5 +200,5 @@ if __name__ == "__main__":
     #     usage()
     #
     # busy_beaver(n)
-    busy_beaver(3)
+    busy_beaver(4)
 
