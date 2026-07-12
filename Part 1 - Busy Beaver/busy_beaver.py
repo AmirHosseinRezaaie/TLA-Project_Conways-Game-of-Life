@@ -99,11 +99,11 @@ beaver_programs = [
     {
         # This is the champion 3-state busy beaver machine:
         # 'a0': ('b', '1', 'r'),
-        # 'a1': ('h', '1', 'r'),
-        # 'b0': ('c', '0', 'r'),
-        # 'b1': ('b', '1', 'r'),
+        # 'a1': ('h', '0', 'l'),
+        # 'b0': ('b', '1', 'l'),
+        # 'b1': ('c', '0', 'r'),
         # 'c0': ('c', '1', 'l'),
-        # 'c1': ('a', '1', 'l') 
+        # 'c1': ('a', '1', 'l')
     
         # our BB(3): (9 steps, writes 5 '1's)
         'a0': ('b', '1', 'r'),
@@ -136,7 +136,7 @@ beaver_programs = [
         'd1': ('h', '1', 'l')
         
     },
-    {
+    {   
         # This is the champion 5-state busy beaver machine:
         # 'a0': ('b', '1', 'r'),
         # 'a1': ('c', '1', 'l'),
@@ -148,7 +148,18 @@ beaver_programs = [
         # 'd1': ('d', '1', 'l'),
         # 'e0': ('h', '1', 'r'),
         # 'e1': ('a', '0', 'l')
-        
+
+        # our BB(5): (15 steps and 8 `1`s)
+        'a0': ('b', '1', 'r'),
+        'a1': ('b', '1', 'l'),
+        'b0': ('c', '1', 'r'),
+        'b1': ('c', '1', 'l'),
+        'c0': ('d', '1', 'r'),
+        'c1': ('d', '1', 'l'),
+        'd0': ('e', '1', 'r'),
+        'd1': ('e', '1', 'l'), # changed r to l
+        'e0': ('a', '1', 'l'),
+        'e1': ('h', '1', 'l')
     },
     {
         # 6-state is currently unproven/unknown max, leaving empty (the BB(6) gets so so large. (BB(5) is already large more than enough.))
