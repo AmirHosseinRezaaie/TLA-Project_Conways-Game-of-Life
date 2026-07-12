@@ -23,12 +23,8 @@ Key points to address:
 
 ### Task 3c - Why Use Generators?
 *Responsible for:* ??
-Explain the benefits of using Python generators in Turing machine simulation.
-Considerations:
-- Memory efficiency for long computations
-- Interactivity and step-by-step debugging
-- Suspension and resumption of computation
-- Streaming output without storing entire history
+
+**Answer:** Python generators are useful for Turing machine simulations because they use lazy evaluation to invert control to the caller. Instead of running an infinite `while` loop that might crash or consume infinite memory, a generator `yields` the machine's configuration step-by-step. This allows us to interactively debug the tape, pause execution, or safely set a `step_limit` to prevent infinite loops, which is especially critical when dealing with undecidable problems like the Busy Beaver.
 
 ### Task 3d: Run 2-Card Busy Beaver
 *Responsible for:* me.
