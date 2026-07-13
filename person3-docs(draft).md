@@ -148,3 +148,23 @@ Before running the simulations, the virtual environment should be activated and 
 - **The Highway:** Verified. After reaching the critical threshold, the ant's behavior suddenly shifted into a stable, 104-step repeating pattern. This caused it to build a thick, diagonal "highway" shooting infinitely away from the chaotic center, proving the emergence of order from chaos.
 ![Langton's Ant Highway](<Langton's Ant.png>)
 
+### Task 2c: Multi-Color Ant Extension
+*Responsible for:* me
+
+**Implementation Details:**
+- The `LangtonsAnt` class was already built generically, so no core logic changes were required to support multi-color rules.
+- Generalized `langton_pygame.py` to accept a `--rule` command-line argument, allowing the simulation of complex cyclic color paths like `LLRR`, `RLRL`, `RLR`, and `LRRL`.
+
+**How to run different Ants:**
+You can choose which ruleset the ant follows by passing the `--rule` argument to the script.
+For example, to run the symmetric `LLRR` ant:
+```powershell
+python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LLRR
+```
+
+Available rules:
+- `RL` (Standard Ant)
+- `RLRL`
+- `LLRR` (Symmetric repeating growth)
+- `RLR`
+- `LRRL`

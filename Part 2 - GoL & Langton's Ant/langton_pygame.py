@@ -14,16 +14,12 @@ import pygame
 from langton import LangtonsAnt
 
 
-DEFAULT_RULES = {
-    0: (1, "R"),
-    1: (0, "L"),
-}
-
-MULTI_COLOR_RULES = {
-    0: (1, "R"),
-    1: (2, "L"),
-    2: (3, "R"),
-    3: (0, "L"),
+RULES_DICT = {
+    "RL": {0: (1, "R"), 1: (0, "L")},
+    "RLRL": {0: (1, "R"), 1: (2, "L"), 2: (3, "R"), 3: (0, "L")},
+    "LLRR": {0: (1, "L"), 1: (2, "L"), 2: (3, "R"), 3: (0, "R")},
+    "RLR": {0: (1, "R"), 1: (2, "L"), 2: (0, "R")},
+    "LRRL": {0: (1, "L"), 1: (2, "R"), 2: (3, "R"), 3: (0, "L")},
 }
 
 PALETTE = [
@@ -106,9 +102,11 @@ def parse_args():
     parser.add_argument("--fps", type=int, default=60, help="Frames per second")
     parser.add_argument("--steps", type=int, default=None, help="Maximum simulation steps")
     parser.add_argument(
-        "--multi-color",
-        action="store_true",
-        help="Use a simple four-color rule set instead of the default two-color rule set",
+        "--rule",
+        type=str,
+        default="RL",
+        choices=list(RULES_DICT.keys()),
+        help="Select the Langton's Ant rule string (e.g. RL, LLRR, RLR)",
     )
     return parser.parse_args()
 
@@ -118,7 +116,7 @@ def main():
     args = parse_args()
     start_row = args.row if args.row is not None else args.size // 2
     start_col = args.col if args.col is not None else args.size // 2
-    rules = MULTI_COLOR_RULES if args.multi_color else DEFAULT_RULES
+    rules = RULES_DICT[args.rule]
 
     ant = LangtonsAnt(args.size, (start_row, start_col), rules)
     run_visualizer(
