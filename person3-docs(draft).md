@@ -153,18 +153,24 @@ Before running the simulations, the virtual environment should be activated and 
 
 **Implementation Details:**
 - The `LangtonsAnt` class was already built generically, so no core logic changes were required to support multi-color rules.
-- Generalized `langton_pygame.py` to accept a `--rule` command-line argument, allowing the simulation of complex cyclic color paths like `LLRR`, `RLRL`, `RLR`, and `LRRL`.
+- Generalized `langton_pygame.py` to accept a `--rule` command-line argument. We completely removed hardcoded rules so that the script mathematically parses **any arbitrary string of 'L's and 'R's** on the fly, allowing for infinite combinations of custom ants.
 
-**How to run different Ants:**
-You can choose which ruleset the ant follows by passing the `--rule` argument to the script.
-For example, to run the symmetric `LLRR` ant:
+**How to run Custom Ants & Control Speed:**
+
+You can invent any rule sequence by passing the `--rule` argument; if no rule is given, the default rule is `RL` (the standard Langton's Ant). 
+
+Additionally, because Pygame rendering can cause lag when drawing thousands of cells, you can dramatically speed up the simulation by using the `--steps-per-frame` argument. This forces the ant to compute multiple steps in the background before drawing a single frame.
+
+For example, to run the symmetric `LLRR` ant at lightning speed (computing 100 steps every frame):
 ```powershell
-python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LLRR
+python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LLRR --steps-per-frame 100
 ```
-
-Available rules:
-- `RL` (Standard Ant)
-- `RLRL`
-- `LLRR` (Symmetric repeating growth)
-- `RLR`
-- `LRRL`
+The results at the beginning will be like:
+![LLRR initial state](langtons_ant_LLRR_start.png)
+and at very, very far steps like: ![LLRR advanced state](langtons_ant_LLRR_far.png)
+Or try making up a completely custom rule:
+```powershell
+python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LRRRRLL
+```
+which results in a pattern like this:
+![LRRRRLL pattern](langtons_ant_LRRRRLL.png)

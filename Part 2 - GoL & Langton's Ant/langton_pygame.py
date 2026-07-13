@@ -55,7 +55,7 @@ def build_surface(grid, cell_scale, ant_position=None, ant_color=(220, 40, 40)):
     return surface
 
 
-def run_visualizer(ant, cell_scale=6, fps=60, max_steps=None, title="Langton's Ant"):
+def run_visualizer(ant, cell_scale=6, fps=60, steps_per_frame=1, max_steps=None, title="Langton's Ant"):
     """Run the pygame event loop for a Langton's Ant simulation."""
     pygame.init()
 
@@ -75,11 +75,14 @@ def run_visualizer(ant, cell_scale=6, fps=60, max_steps=None, title="Langton's A
         screen.blit(surface, (0, 0))
         pygame.display.flip()
 
-        ant.step()
+        for _ in range(steps_per_frame):
+            ant.step()
+            steps += 1
+            if max_steps is not None and steps >= max_steps:
+                finished = True
+                break
+                
         grid = ant.get_states()
-        steps += 1
-        if max_steps is not None and steps >= max_steps:
-            finished = True
 
         clock.tick(fps)
 
@@ -94,6 +97,7 @@ def parse_args():
     parser.add_argument("--col", type=int, default=None, help="Starting column")
     parser.add_argument("--cell-scale", type=int, default=6, help="Pixel scale per cell")
     parser.add_argument("--fps", type=int, default=60, help="Frames per second")
+    parser.add_argument("--steps-per-frame", type=int, default=1, help="Number of ant steps to compute before drawing the next frame")
     parser.add_argument("--steps", type=int, default=None, help="Maximum simulation steps")
     parser.add_argument(
         "--rule",
@@ -117,6 +121,7 @@ def main():
         ant,
         cell_scale=args.cell_scale,
         fps=args.fps,
+        steps_per_frame=args.steps_per_frame,
         max_steps=args.steps,
         title="Langton's Ant",
     )
