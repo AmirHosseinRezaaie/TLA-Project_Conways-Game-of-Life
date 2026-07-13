@@ -133,3 +133,18 @@ The given link was broken, working link: https://en.wikipedia.org/wiki/Busy_beav
 - Implemented `__init__` to initialize the `N x N` grid, starting position, orientation (using `0, 1, 2, 3` for directions), and the rule dictionary.
 - Implemented the `step()` method to process the ant's movement: read current color, fetch next color and turning direction from rules, update the grid, rotate the ant, step forward, and wrap around the toroidal grid using modulo arithmetic.
 - The `update()` method is simply an alias for `step()` to work with the Pygame animator.
+
+### Task 2b: Simulate and Prove Scenarios
+*Responsible for:* me
+
+**Environment Setup Note:**
+Before running the simulations, the virtual environment should be activated and dependencies installed:
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+**Observation Results:**
+- **Chaotic behavior:** Verified. For the first several minutes of the simulation (~10,000 steps, ~6 minutes), the ant moved unpredictably, creating a dense, semi-symmetric pseudo-random blob of black and white cells in the center of the grid.
+- **The Highway:** Verified. After reaching the critical threshold, the ant's behavior suddenly shifted into a stable, 104-step repeating pattern. This caused it to build a thick, diagonal "highway" shooting infinitely away from the chaotic center, proving the emergence of order from chaos.
+![Langton's Ant Highway](<Langton's Ant.png>)
+
