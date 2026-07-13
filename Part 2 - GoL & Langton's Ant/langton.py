@@ -2,6 +2,7 @@
 """
 Langton's Ant Student Template Module.
 """
+# pyrefly: ignore [missing-import]
 import numpy as np
 
 

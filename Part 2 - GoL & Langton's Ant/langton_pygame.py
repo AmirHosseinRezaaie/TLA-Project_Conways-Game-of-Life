@@ -8,6 +8,7 @@ renders the grid plus the ant position in a pygame window.
 
 import argparse
 
+# pyrefly: ignore [missing-import]
 import numpy as np
 import pygame
 
