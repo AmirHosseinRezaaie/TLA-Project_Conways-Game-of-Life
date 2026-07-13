@@ -30,8 +30,11 @@ class LangtonsAnt:
             rules (dict): Dictionary defining transition rules.
                           Format: {current_color: (next_color, turn_direction)}
         """
-        # Student TODO: Implement initialization
-        pass
+        self.N = N
+        self.grid = np.zeros((N, N), dtype=int)
+        self.ant_pos = list(ant_position)
+        self.rules = rules
+        self.direction = 0  # 0: North, 1: East, 2: South, 3: West
 
     def get_states(self):
         """
@@ -40,8 +43,7 @@ class LangtonsAnt:
         Returns:
             np.ndarray: The NxN cellular grid.
         """
-        # Student TODO: Return grid state
-        pass
+        return self.grid
 
     def get_current_position(self):
         """
@@ -50,15 +52,37 @@ class LangtonsAnt:
         Returns:
             tuple: Current coordinates of the ant.
         """
-        # Student TODO: Return current position
-        pass
+        return tuple(self.ant_pos)
 
     def step(self):
         """
         Perform a single simulation step following the ruleset.
         """
-        # Student TODO: Implement the ant's movement and cell state updates
-        pass
+        r, c = self.ant_pos
+        current_color = self.grid[r, c]
+        
+        if current_color not in self.rules:
+            return
+            
+        next_color, turn_dir = self.rules[current_color]
+        
+        self.grid[r, c] = next_color
+        
+        if turn_dir == 'R':
+            self.direction = (self.direction + 1) % 4
+        elif turn_dir == 'L':
+            self.direction = (self.direction - 1) % 4
+            
+        if self.direction == 0:
+            r -= 1
+        elif self.direction == 1:
+            c += 1
+        elif self.direction == 2:
+            r += 1
+        elif self.direction == 3:
+            c -= 1
+            
+        self.ant_pos = [r % self.N, c % self.N]
 
     def update(self):
         """

@@ -121,3 +121,15 @@ I have implemented the champion transition tables for BB(3) and BB(4) inside `bu
 
 ### Notes:
 The given link was broken, working link: https://en.wikipedia.org/wiki/Busy_beaver#Known_values_for_%CE%A3_and_S
+
+---
+
+## Part 2 - Section 2 | *Langton's Ant*
+
+### Task 2a: Implement Langton's Ant Core (`langton.py`)
+*Responsible for:* me
+
+**Implementation Details:**
+- Implemented `__init__` to initialize the `N x N` grid, starting position, orientation (using `0, 1, 2, 3` for directions), and the rule dictionary.
+- Implemented the `step()` method to process the ant's movement: read current color, fetch next color and turning direction from rules, update the grid, rotate the ant, step forward, and wrap around the toroidal grid using modulo arithmetic.
+- The `update()` method is simply an alias for `step()` to work with the Pygame animator.
