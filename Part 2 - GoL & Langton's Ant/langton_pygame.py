@@ -8,23 +8,14 @@ renders the grid plus the ant position in a pygame window.
 
 import argparse
 
+# pyrefly: ignore [missing-import]
 import numpy as np
 import pygame
 
 from langton import LangtonsAnt
 
 
-DEFAULT_RULES = {
-    0: (1, "R"),
-    1: (0, "L"),
-}
 
-MULTI_COLOR_RULES = {
-    0: (1, "R"),
-    1: (2, "L"),
-    2: (3, "R"),
-    3: (0, "L"),
-}
 
 PALETTE = [
     (0, 0, 0),
@@ -65,7 +56,7 @@ def build_surface(grid, cell_scale, ant_position=None, ant_color=(220, 40, 40)):
     return surface
 
 
-def run_visualizer(ant, cell_scale=6, fps=60, max_steps=None, title="Langton's Ant"):
+def run_visualizer(ant, cell_scale=6, fps=60, steps_per_frame=1, max_steps=None, title="Langton's Ant"):
     """Run the pygame event loop for a Langton's Ant simulation."""
     pygame.init()
 
@@ -85,11 +76,14 @@ def run_visualizer(ant, cell_scale=6, fps=60, max_steps=None, title="Langton's A
         screen.blit(surface, (0, 0))
         pygame.display.flip()
 
-        ant.step()
+        for _ in range(steps_per_frame):
+            ant.step()
+            steps += 1
+            if max_steps is not None and steps >= max_steps:
+                finished = True
+                break
+                
         grid = ant.get_states()
-        steps += 1
-        if max_steps is not None and steps >= max_steps:
-            finished = True
 
         clock.tick(fps)
 
@@ -104,11 +98,13 @@ def parse_args():
     parser.add_argument("--col", type=int, default=None, help="Starting column")
     parser.add_argument("--cell-scale", type=int, default=6, help="Pixel scale per cell")
     parser.add_argument("--fps", type=int, default=60, help="Frames per second")
+    parser.add_argument("--steps-per-frame", type=int, default=1, help="Number of ant steps to compute before drawing the next frame")
     parser.add_argument("--steps", type=int, default=None, help="Maximum simulation steps")
     parser.add_argument(
-        "--multi-color",
-        action="store_true",
-        help="Use a simple four-color rule set instead of the default two-color rule set",
+        "--rule",
+        type=str,
+        default="RL",
+        help="Select any custom Langton's Ant rule string (e.g. RL, LLRR, RRRLL)",
     )
     return parser.parse_args()
 
@@ -118,13 +114,15 @@ def main():
     args = parse_args()
     start_row = args.row if args.row is not None else args.size // 2
     start_col = args.col if args.col is not None else args.size // 2
-    rules = MULTI_COLOR_RULES if args.multi_color else DEFAULT_RULES
+    rule_str = args.rule.upper()
+    rules = {i: ((i + 1) % len(rule_str), turn) for i, turn in enumerate(rule_str)}
 
     ant = LangtonsAnt(args.size, (start_row, start_col), rules)
     run_visualizer(
         ant,
         cell_scale=args.cell_scale,
         fps=args.fps,
+        steps_per_frame=args.steps_per_frame,
         max_steps=args.steps,
         title="Langton's Ant",
     )
