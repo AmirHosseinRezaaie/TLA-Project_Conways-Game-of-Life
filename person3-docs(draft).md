@@ -204,11 +204,6 @@ To mathematically prove the Truth Table for both gates, run the logic script in 
 python "Part 2 - GoL & Langton's Ant\logic_gates.py"
 ```
 
-To visually demonstrate the gliders flying and crashing in a Pygame window run the visualizer script:
-```powershell
-python "Part 2 - GoL & Langton's Ant\pygame_logic_gates.py"
-```
-
 **Expected Output:**
 ```
 --- Demonstrating AND Gate ---
@@ -224,4 +219,10 @@ Input A | Output
 ------------------
   False |  True
   True  |  False
+```
+
+
+To visually demonstrate the gliders flying and crashing in a Pygame window run the visualizer script:
+```powershell
+python "Part 2 - GoL & Langton's Ant\pygame_logic_gates.py"
 ```

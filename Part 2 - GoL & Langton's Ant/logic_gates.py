@@ -101,7 +101,9 @@ class GliderLogicGates:
         # Check if there is any living cell exactly at or immediately adjacent to the target (15, 12)
         target_area = gol.grid[14:17, 11:14]
         
-        if np.sum(target_area) > 0:
+        # A single Block has exactly 4 living cells. 
+        # By checking == 4, we strictly ensure a proper Block was formed, not just random debris!
+        if np.sum(target_area) == 4:
             return True
             
         return False
