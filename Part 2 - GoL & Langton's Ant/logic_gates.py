@@ -34,13 +34,13 @@ class GliderLogicGates:
         gol = GameOfLife(N=grid_size)
         
         if input_a_present:
-            # Shifted from (2, 2) to (9, 6) so it crashes at (15, 12)
-            gol.insertGlider(index=(9, 6))
+            # Shifted to (10, 7) to form a perfect single block at (15, 12)
+            gol.insertGlider(index=(10, 7))
             
         if input_b_present:
-            # Shifted from (2, 14) to (9, 18) so it crashes at (15, 12)
-            r = 9
-            c = 18
+            # Shifted to (7, 16) to form a perfect single block at (15, 12)
+            r = 7
+            c = 16
             gol.grid[r, c+1] = gol.aliveValue
             gol.grid[r+1, c] = gol.aliveValue
             gol.grid[r+2, c] = gol.aliveValue
@@ -62,13 +62,13 @@ class GliderLogicGates:
         """
         gol = GameOfLife(N=grid_size)
         
-        # The "Power Supply" or "Control Glider": Always fired from (9, 6)
+        # The "Power Supply" or "Control Glider": Always fired from (10, 7)
         # This represents our default output of True (1)
-        gol.insertGlider(index=(9, 6))
+        gol.insertGlider(index=(10, 7))
         
-        # Input A: If present, it fires from (9, 18) to crash into the Control Glider
+        # Input A: If present, it fires from (7, 16) to crash into the Control Glider
         if input_a_present:
-            r, c = 9, 18
+            r, c = 7, 16
             gol.grid[r, c+1] = gol.aliveValue
             gol.grid[r+1, c] = gol.aliveValue
             gol.grid[r+2, c] = gol.aliveValue
