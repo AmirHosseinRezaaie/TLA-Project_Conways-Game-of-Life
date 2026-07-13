@@ -6,24 +6,83 @@ This module defines the classes required for the GoL simulation.
 """
 import numpy as np
 from scipy import signal, ndimage
+from scipy.signal import convolve2d
+"برای حالت بهینه سازی و سریع"
 
 
 def parse_pattern(filepath):
-    """
-    TODO: [Part 1d - RLE/Plaintext Parser]
-    Write a parser for Run Length Encoded (RLE) or Plaintext (.cells) patterns
-    so grids larger than 20x20 can be loaded.
+    live_cells = []
+    width = 0
+    height = 0
     
-    Args:
-        filepath (str): Path to the pattern file.
+    with open(filepath, 'r') as file:
+        lines = file.readlines()
         
-    Returns:
-        tuple: (width, height, list of (r, c) offsets of live cells)
-    """
-    # Student TODO: Implement parser here
-    pass
-
-
+    if filepath.endswith('.cells'):
+        row_idx = 0
+        for line in lines:
+            line = line.strip()
+            if line.startswith('!') or len(line) == 0:
+                continue
+            
+            if len(line) > width:
+                width = len(line)
+                
+            col_idx = 0
+            for char in line:
+                if char == 'O' or char == 'o':
+                    live_cells.append((row_idx, col_idx))
+                col_idx += 1
+            row_idx += 1
+        height = row_idx
+        
+    elif filepath.endswith('.rle'):
+        row_idx = 0
+        col_idx = 0
+        pattern_data = ""
+        
+        for line in lines:
+            line = line.strip()
+            if line.startswith('#') or len(line) == 0:
+                continue
+            if line.startswith('x'):
+                parts = line.split(',')
+                width_part = parts[0].split('=')[1]
+                width = int(width_part.strip())
+                height_part = parts[1].split('=')[1]
+                height = int(height_part.strip())
+                continue
+            pattern_data += line
+            
+        count_str = ""
+        for char in pattern_data:
+            if char.isdigit():
+                count_str += char
+            elif char == 'b':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                col_idx += num
+                count_str = ""
+            elif char == 'o':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                for _ in range(num):
+                    live_cells.append((row_idx, col_idx))
+                    col_idx += 1
+                count_str = ""
+            elif char == '$':
+                num = 1
+                if len(count_str) > 0:
+                    num = int(count_str)
+                row_idx += num
+                col_idx = 0
+                count_str = ""
+            elif char == '!':
+                break
+                
+    return width, height, live_cells
 class GameOfLife:
     """
     Object for computing Conway's Game of Life (GoL) cellular machine/automata
@@ -53,20 +112,32 @@ class GameOfLife:
         return self.getStates()
 
     def update_grid_fast(self, grid):
-        """
-        TODO: [Part 1e - Fast Convolution]
-        Use scipy.signal.convolve2d (or similar) to compute neighbor weights
-        rapidly for large grids (N > 1024).
+        kernel = np.array([[1, 1, 1],
+                           [1, 0, 1],
+                           [1, 1, 1]])
         
-        Args:
-            grid (np.ndarray): The current 2D grid of states.
+        if self.finite:
+            mode_boundary = 'fill'
+        else:
+            mode_boundary = 'wrap'
             
-        Returns:
-            np.ndarray: The next 2D grid of states.
+        neighbors = convolve2d(grid, kernel, mode='same', boundary=mode_boundary, fillvalue=0)
+        
+        next_grid = np.zeros_like(grid)
+        
+        next_grid[(grid == 1) & ((neighbors == 2) | (neighbors == 3))] = 1
+        next_grid[(grid == 0) & (neighbors == 3)] = 1
+        
+        return next_grid
+    def tick(self):
         """
-        # Student TODO: Implement fast 2D convolution method
-        pass
-
+        Advances the game by one generation.
+        """
+        if self.fastMode:
+            self.grid = self.update_grid_fast(self.grid)
+        else:
+            self.evolve()
+    
     def evolve(self):
         """
         Given the current states of the cells, apply the GoL rules:
@@ -78,13 +149,32 @@ class GameOfLife:
         if self.fastMode:
             self.grid = self.update_grid_fast(self.grid)
         else:
-            # TODO: [Part 1a - Core Rules]
-            # Remove the transition logic and implement the 4 standard GoL rules
-            # (Underpopulation, Survival, Overpopulation, Reproduction) by iterating 
-            # through the cells cell-by-cell. Handle self.finite wrapping appropriately.
-            
-            # Student TODO: Implement slow update cell-by-cell logic here
-            pass
+            next_grid = np.zeros((self.rows, self.cols), dtype=np.uint)
+            for r in range(self.rows):
+                for c in range(self.cols):
+                    live_neighbors = 0
+                    for dr in [-1, 0, 1]:
+                        for dc in [-1, 0, 1]:
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr = r + dr
+                            nc = c + dc
+                            if self.finite:
+                                if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                                    if self.grid[nr, nc] == 1:
+                                        live_neighbors += 1
+                            else:
+                                nr = nr % self.rows
+                                nc = nc % self.cols
+                                if self.grid[nr, nc] == 1:
+                                    live_neighbors += 1
+                    if self.grid[r, c] == 1:
+                        if live_neighbors == 2 or live_neighbors == 3:
+                            next_grid[r, c] = 1
+                    else:
+                        if live_neighbors == 3:
+                            next_grid[r, c] = 1
+            self.grid = next_grid
 
     def insertBlinker(self, index=(0, 0)):
         '''
@@ -110,50 +200,42 @@ class GameOfLife:
         The current glider gun pattern is broken. Leave the broken array in the code 
         and instruct the student to debug and fix the coordinates so it loops infinitely.
         '''
-        self.grid[index[0] + 1, index[1] + 26] = self.aliveValue
-
-        self.grid[index[0] + 2, index[1] + 24] = self.aliveValue
-        self.grid[index[0] + 2, index[1] + 26] = self.aliveValue
-
+        self.grid[index[0] + 1, index[1] + 25] = self.aliveValue
+        self.grid[index[0] + 2, index[1] + 23] = self.aliveValue
+        self.grid[index[0] + 2, index[1] + 25] = self.aliveValue
+        self.grid[index[0] + 3, index[1] + 13] = self.aliveValue
         self.grid[index[0] + 3, index[1] + 14] = self.aliveValue
-        self.grid[index[0] + 3, index[1] + 15] = self.aliveValue
+        self.grid[index[0] + 3, index[1] + 21] = self.aliveValue
         self.grid[index[0] + 3, index[1] + 22] = self.aliveValue
-        self.grid[index[0] + 3, index[1] + 23] = self.aliveValue
+        self.grid[index[0] + 3, index[1] + 35] = self.aliveValue
         self.grid[index[0] + 3, index[1] + 36] = self.aliveValue
-        self.grid[index[0] + 3, index[1] + 37] = self.aliveValue
-
-        self.grid[index[0] + 4, index[1] + 13] = self.aliveValue
-        self.grid[index[0] + 4, index[1] + 17] = self.aliveValue
+        self.grid[index[0] + 4, index[1] + 12] = self.aliveValue
+        self.grid[index[0] + 4, index[1] + 16] = self.aliveValue
+        self.grid[index[0] + 4, index[1] + 21] = self.aliveValue
         self.grid[index[0] + 4, index[1] + 22] = self.aliveValue
-        self.grid[index[0] + 4, index[1] + 23] = self.aliveValue
+        self.grid[index[0] + 4, index[1] + 35] = self.aliveValue
         self.grid[index[0] + 4, index[1] + 36] = self.aliveValue
-        self.grid[index[0] + 4, index[1] + 37] = self.aliveValue
-
-        self.grid[index[0] + 5, index[1] + 1 + 1] = self.aliveValue
-        self.grid[index[0] + 5, index[1] + 2 + 1] = self.aliveValue
-        self.grid[index[0] + 5, index[1] + 12] = self.aliveValue
-        self.grid[index[0] + 5, index[1] + 18] = self.aliveValue
+        self.grid[index[0] + 5, index[1] + 1] = self.aliveValue
+        self.grid[index[0] + 5, index[1] + 2] = self.aliveValue
+        self.grid[index[0] + 5, index[1] + 11] = self.aliveValue
+        self.grid[index[0] + 5, index[1] + 17] = self.aliveValue
+        self.grid[index[0] + 5, index[1] + 21] = self.aliveValue
         self.grid[index[0] + 5, index[1] + 22] = self.aliveValue
-        self.grid[index[0] + 5, index[1] + 23] = self.aliveValue
-
-        self.grid[index[0] + 6, index[1] + 1 + 1] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 2 + 1] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 12] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 16] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 1] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 2] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 11] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 15] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 17] = self.aliveValue
         self.grid[index[0] + 6, index[1] + 18] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 19] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 24] = self.aliveValue
-        self.grid[index[0] + 6, index[1] + 26] = self.aliveValue
-
-        self.grid[index[0] + 7, index[1] + 12] = self.aliveValue
-        self.grid[index[0] + 7, index[1] + 18] = self.aliveValue
-        self.grid[index[0] + 7, index[1] + 26] = self.aliveValue
-
-        self.grid[index[0] + 8, index[1] + 13] = self.aliveValue
-        self.grid[index[0] + 8, index[1] + 17] = self.aliveValue
-
+        self.grid[index[0] + 6, index[1] + 23] = self.aliveValue
+        self.grid[index[0] + 6, index[1] + 25] = self.aliveValue
+        self.grid[index[0] + 7, index[1] + 11] = self.aliveValue
+        self.grid[index[0] + 7, index[1] + 17] = self.aliveValue
+        self.grid[index[0] + 7, index[1] + 25] = self.aliveValue
+        self.grid[index[0] + 8, index[1] + 12] = self.aliveValue
+        self.grid[index[0] + 8, index[1] + 16] = self.aliveValue
+        self.grid[index[0] + 9, index[1] + 13] = self.aliveValue
         self.grid[index[0] + 9, index[1] + 14] = self.aliveValue
-        self.grid[index[0] + 9, index[1] + 15] = self.aliveValue
 
     def insertFromFile(self, filename, index=((0, 0))):
         '''
