@@ -174,3 +174,50 @@ python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LRRRRLL
 ```
 which results in a pattern like this:
 ![LRRRRLL pattern](langtons_ant_LRRRRLL.png)
+
+---
+
+## Part 2 - Section 3 | *Logic Gates in Game of Life*
+
+### Task 3a: Implement AND Gate (`setup_and_gate` & `run_and_gate`)
+*Responsible for:* me
+
+**Implementation Details:**
+- **The Concept:** In Game of Life, we use Gliders as our "wires" and "electricity". A glider is a 5-pixel shape that continuously flies diagonally across the grid.
+- **The Setup:** To build an AND gate, we need two gliders (Input A and Input B) to collide at the exact target coordinate `(15, 12)`.
+- **Input A:** Placed at `(9, 6)` using the built-in `insertGlider()` method. It flies diagonally **bottom-right**.
+- **Input B:** Placed at `(9, 18)`. Because the built-in method only flies right, we manually drew the 5 pixels on the grid to create a mirrored glider that flies diagonally **bottom-left**.
+- **Execution & Logic:** We advance the simulation for 30 ticks to give the gliders time to cross the board and collide. We evaluate the logical outcome based on the fundamental properties of the game's shapes. A Block (the target output for our AND gate) consists of exactly 4 living cells. By summing the entire grid `np.sum(gol.grid)`, if the total equals 4, we mathematically prove that a Block was formed, meaning the AND gate successfully output `True`.
+
+### Task 3b: Implement NOT Gate (`setup_not_gate` & `run_not_gate`)
+*Responsible for:* me
+
+**Implementation Details:**
+- **The Setup:** A NOT gate requires a constant "power supply". We always fire a Control Glider from `(9, 6)`. 
+- **Input A:** If the input is True, we fire an interceptor glider from `(9, 18)`.
+- **Execution & Logic:** We advance the simulation for 30 ticks. If Input A was False, the Control Glider flies safely across the board. A single glider has exactly 5 living cells, so if `np.sum(gol.grid) == 5`, we know the Control Glider survived, and the NOT gate outputs `True`. If Input A was True, the interceptor crashes into the Control Glider and forms a Block (4 cells). The Control Glider was destroyed, so the NOT gate outputs `False`.
+
+### Testing the Logic Gates
+A testing block has been appended to the bottom of `logic_gates.py` to automatically execute and prove the Truth Table for both gates. 
+
+To run the test and verify the outputs, execute the following command in the terminal:
+```powershell
+python "Part 2 - GoL & Langton's Ant\logic_gates.py"
+```
+
+**Expected Output:**
+```
+--- Demonstrating AND Gate ---
+Input A | Input B | Output
+--------------------------
+  False |  False  |  False
+  False |  True   |  False
+  True  |  False  |  False
+  True  |  True   |  True
+
+--- Demonstrating NOT Gate ---
+Input A | Output
+------------------
+  False |  True
+  True  |  False
+```
