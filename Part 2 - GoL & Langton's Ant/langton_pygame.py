@@ -14,13 +14,7 @@ import pygame
 from langton import LangtonsAnt
 
 
-RULES_DICT = {
-    "RL": {0: (1, "R"), 1: (0, "L")},
-    "RLRL": {0: (1, "R"), 1: (2, "L"), 2: (3, "R"), 3: (0, "L")},
-    "LLRR": {0: (1, "L"), 1: (2, "L"), 2: (3, "R"), 3: (0, "R")},
-    "RLR": {0: (1, "R"), 1: (2, "L"), 2: (0, "R")},
-    "LRRL": {0: (1, "L"), 1: (2, "R"), 2: (3, "R"), 3: (0, "L")},
-}
+
 
 PALETTE = [
     (0, 0, 0),
@@ -105,8 +99,7 @@ def parse_args():
         "--rule",
         type=str,
         default="RL",
-        choices=list(RULES_DICT.keys()),
-        help="Select the Langton's Ant rule string (e.g. RL, LLRR, RLR)",
+        help="Select any custom Langton's Ant rule string (e.g. RL, LLRR, RRRLL)",
     )
     return parser.parse_args()
 
@@ -116,7 +109,8 @@ def main():
     args = parse_args()
     start_row = args.row if args.row is not None else args.size // 2
     start_col = args.col if args.col is not None else args.size // 2
-    rules = RULES_DICT[args.rule]
+    rule_str = args.rule.upper()
+    rules = {i: ((i + 1) % len(rule_str), turn) for i, turn in enumerate(rule_str)}
 
     ant = LangtonsAnt(args.size, (start_row, start_col), rules)
     run_visualizer(
