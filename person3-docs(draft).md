@@ -197,12 +197,16 @@ which results in a pattern like this:
 - **Input A:** If the input is True, we fire an interceptor glider from `(9, 18)`.
 - **Execution & Logic:** We advance the simulation for 30 ticks. If Input A was False, the Control Glider flies safely across the board. A single glider has exactly 5 living cells, so if `np.sum(gol.grid) == 5`, we know the Control Glider survived, and the NOT gate outputs `True`. If Input A was True, the interceptor crashes into the Control Glider and forms a Block (4 cells). The Control Glider was destroyed, so the NOT gate outputs `False`.
 
-### Testing the Logic Gates
-A testing block has been appended to the bottom of `logic_gates.py` to automatically execute and prove the Truth Table for both gates. 
-
-To run the test and verify the outputs, execute the following command in the terminal:
+### Testing the Logic Gates 
+#### Testing the Logic Gates
+To mathematically prove the Truth Table for both gates, run the logic script in your terminal:
 ```powershell
 python "Part 2 - GoL & Langton's Ant\logic_gates.py"
+```
+
+To visually demonstrate the gliders flying and crashing in a Pygame window run the visualizer script:
+```powershell
+python "Part 2 - GoL & Langton's Ant\pygame_logic_gates.py"
 ```
 
 **Expected Output:**
