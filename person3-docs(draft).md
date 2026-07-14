@@ -22,15 +22,15 @@ Key points to address:
 *Responsible for:* not me.
 
 ### Task 3c - Why Use Generators?
-*Responsible for:* ??
+*Responsible for:* me
 
 **Answer:** Python generators are useful for Turing machine simulations because they use lazy evaluation to invert control to the caller. Instead of running an infinite `while` loop that might crash or consume infinite memory, a generator `yields` the machine's configuration step-by-step. This allows us to interactively debug the tape, pause execution, or safely set a `step_limit` to prevent infinite loops, which is especially critical when dealing with undecidable problems like the Busy Beaver.
 
 ### Task 3d: Run 2-Card Busy Beaver
 *Responsible for:* me.
 
-The BB(2) was implemented as instructured.
-*Quetion:* Starting with a blank tape, how many 1s does the machine produce?
+The BB(2) was implemented as instructed.
+*Question:* Starting with a blank tape, how many 1s does the machine produce?
 *Answer:* four `1`s (Was tested).
 *Test:* in .\TLA-Project_Conways-Game-of-Life\Part 1 - Busy Beaver\busy_beaver.py, in the last line there is busy_beaver(`n`) call, set `n`=2 and then run `python "Part 1 - Busy Beaver\busy_beaver.py" in the terminal. The result will be:
 ```
@@ -61,7 +61,7 @@ b: 1[1]11
 Busy beaver finished in 6 steps.
 `
 - How does it compare to the optimal 2-state machine?
-It is completely identical! The given instructure for the BB(2) in the docs is exactly the same as the trophy BB(2).
+It is completely identical! The given structure for the BB(2) in the docs is exactly the same as the trophy BB(2).
 - Evaluate your result against established benchmarks
 Since the provided machine is mathematically equivalent to the known benchmark champion for BB(2), my result perfectly matches the absolute upper limit of computation possible for a 2-state Turing machine. No 2-state machine can produce more than four 1s or run for more than 6 steps and still halt.
 
@@ -73,7 +73,7 @@ Design and implement your own Busy Beaver machines with 3 and 4 states:
 - You do not need to find the absolute optimal machines (BB(3) and BB(4))
 - Just create machines that outperform the 2-state machines
 - Show the number of 1s produced by each machine
-Our own editon of BB(3) and BB(4) was implemented. The numbers of `1`s produced and number of steps each took, is commented next to them in the busy_beaver.py.
+Our own edition of BB(3) and BB(4) was implemented. The numbers of `1`s produced and number of steps each took, is commented next to them in the busy_beaver.py.
 For BB(3): 9 steps and 5 `1`s.
 For BB(4): 10 steps and 6 `1`s.
 
@@ -87,11 +87,11 @@ Try to find or create a 5-state Busy Beaver machine:
 - Provide reasoning for your design
 
 *Answers*:
-- The machine I wrote, althouh isn't extracted from internet, isn't new. It uses a verry simple logic and writes only 8 `1`s and halts in 15 steps, so I can't say it's new, it's simple and known in the sience society. It halts because the machine builds a chain of 1s by bouncing back and forth, and once the chain reaches 8 1s long, it triggers the halt state (h) directly from state e.
+- The machine I wrote, although isn't extracted from the internet, isn't new. It uses a very simple logic and writes only 8 `1`s and halts in 15 steps, so I can't say it's new; it's simple and known in the science society. It halts because the machine builds a chain of 1s by bouncing back and forth, and once the chain reaches 8 1s long, it triggers the halt state (h) directly from state e.
 
-- There is a verry huge difference between my BB(5) and the champion BB(5) wich halts in 47,176,870 steps and leaves 4,098 ones.
+- There is a very huge difference between my BB(5) and the champion BB(5) which halts in 47,176,870 steps and leaves 4,098 ones.
 
-- I just scaled up the pattern I have used in BB(3) and BB(4) which was sweeping pattern, for BB(5). This way for sure, no world records can be moved, but at least it definitly halts.
+- I just scaled up the pattern I have used in BB(3) and BB(4) which was a sweeping pattern, for BB(5). This way for sure, no world records can be moved, but at least it definitely halts.
 
 
 ### Task 3h: Research and Verify
@@ -106,7 +106,7 @@ As the number of states increases, the maximum number of steps before halting gr
 Definitely no.
 
 - Implement the champion machines and verify their output
-I have implemented the champion transition tables for BB(3) and BB(4) inside `busy_beaver.py`. By running the simulator, I verified that they match the reference limits exactly: the 3-state champion halts in exactly 21 steps, and the 4-state champion halts in exactly 107 steps. right now the champion BBs are commented in the `busy_beaver.py`, in order to tesst it, comment my implemented BBs and un-comment the champion BBs.
+I have implemented the champion transition tables for BB(3) and BB(4) inside `busy_beaver.py`. By running the simulator, I verified that they match the reference limits exactly: the 3-state champion halts in exactly 21 steps, and the 4-state champion halts in exactly 107 steps. Right now the champion BBs are commented in the `busy_beaver.py`. In order to test it, comment my implemented BBs and un-comment the champion BBs.
 
 - Compare results with your designs
   - **BB(2):** My implementation was mathematically identical to the champion machine, achieving the absolute maximum of 6 steps(Since the instruction was in the main docs).
@@ -167,7 +167,10 @@ python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LLRR --steps-per-
 ```
 The results at the beginning will be like:
 ![LLRR initial state](langtons_ant_LLRR_start.png)
-and at very, very far steps like: ![LLRR advanced state](langtons_ant_LLRR_far.png)
+
+and at very, very far steps like:
+ ![LLRR advanced state](langtons_ant_LLRR_far.png)
+
 Or try making up a completely custom rule:
 ```powershell
 python "Part 2 - GoL & Langton's Ant\langton_pygame.py" --rule LRRRRLL
@@ -187,7 +190,7 @@ which results in a pattern like this:
 - **The Setup:** To build an AND gate, we need two gliders (Input A and Input B) to collide at the exact target coordinate `(15, 12)`.
 - **Input A:** Placed at `(10, 7)` using the built-in `insertGlider()` method. It flies diagonally **bottom-right**.
 - **Input B:** Placed at `(7, 16)`. Because the built-in method only flies right, we manually drew the 5 pixels on the grid to create a mirrored glider that flies diagonally **bottom-left**.
-- **Execution & Logic:** We advance the simulation for 30 ticks to give the gliders time to cross the board and collide. We evaluate the logical outcome based on the fundamental properties of the game's shapes. A Block (the target output for our AND gate) consists of exactly 4 living cells. By summing the entire grid `np.sum(gol.grid)`, if the total equals 4, we mathematically prove that a Block was formed, meaning the AND gate successfully output `True`.
+- **Execution & Logic:** We advance the simulation for 30 ticks to give the gliders time to cross the board and collide. We evaluate the logical outcome based on the fundamental properties of the game's shapes. A Block (the target output for our AND gate) consists of exactly 4 living cells. By summing the target region `np.sum(gol.grid[14:17, 11:14])`, if the total equals 4, we mathematically prove that a Block was formed at coordinates `(15, 12)`, meaning the AND gate successfully output `True`.
 
 ### Task 3b: Implement NOT Gate (`setup_not_gate` & `run_not_gate`)
 *Responsible for:* me
@@ -197,8 +200,7 @@ which results in a pattern like this:
 - **Input A:** If the input is True, we fire an interceptor glider from `(7, 16)`.
 - **Execution & Logic:** We advance the simulation for 30 ticks. If Input A was False, the Control Glider flies safely across the board. A single glider has exactly 5 living cells, so if `np.sum(gol.grid) == 5`, we know the Control Glider survived, and the NOT gate outputs `True`. If Input A was True, the interceptor crashes into the Control Glider and forms a Block (4 cells). The Control Glider was destroyed, so the NOT gate outputs `False`.
 
-### Testing the Logic Gates 
-#### Testing the Logic Gates
+### Testing the Logic Gates
 To mathematically prove the Truth Table for both gates, run the logic script in your terminal:
 ```powershell
 python "Part 2 - GoL & Langton's Ant\logic_gates.py"
@@ -222,7 +224,7 @@ Input A | Output
 ```
 
 
-To visually demonstrate the gliders flying and crashing in a Pygame window run the visualizer script:
+To visually demonstrate the gliders flying and crashing in a Pygame window, run the visualizer script:
 ```powershell
 python "Part 2 - GoL & Langton's Ant\pygame_logic_gates.py"
 ```
