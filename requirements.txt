@@ -1,3 +1,7 @@
+# Original dependencies (unchanged)
 pygame
 numpy
 scipy
+
+# New: used by tests/ (tla_lab test suite)
+pytest
